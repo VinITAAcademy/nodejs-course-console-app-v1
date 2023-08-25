@@ -2,9 +2,8 @@ import {parseArgs} from "node:util";
 
 console.log("The Weather CLI App");
 
-const result = parseArgs({
-  args: process.argv.slice(2),
-  options: {
+function parseCommand(args) {
+  const options = {
     city: {
       type: "string",
       short: "c",
@@ -15,8 +14,20 @@ const result = parseArgs({
     long: {
       type: "string",
     },
-  },
-  allowPositionals: true,
-})
+  };
 
-console.log(result)
+  const {values, positionals} = parseArgs({
+    args,
+    options,
+    allowPositionals: true,
+  });
+
+  return {
+    command: positionals[0],
+    options: values,
+  }
+}
+
+const command = parseCommand(process.argv.slice(2));
+
+console.log(command);
