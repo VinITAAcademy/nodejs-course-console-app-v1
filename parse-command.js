@@ -20,6 +20,12 @@ export function parseCommand(args) {
     allowPositionals: true,
   });
 
+  if (positionals.length !== 1) {
+    throw new Error(
+      `Wrong number of positional arguments: ${positionals.length}`,
+    );
+  }
+
   return {
     command: positionals[0],
     options: values,
