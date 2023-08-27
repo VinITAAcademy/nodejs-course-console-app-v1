@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "test": "node --test .",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "eslint": "^8.48.0"
+  }
 }
