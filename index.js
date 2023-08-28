@@ -6,7 +6,7 @@ try {
   const command = parseCommand(process.argv.slice(2));
 
   if (command.command === "current") {
-    getCurrentWeather();
+    getCurrentWeather(command.options);
   } else {
     throw new Error(`Unknown command: ${command.command}`);
   }
@@ -22,9 +22,10 @@ try {
   process.exit(1);
 }
 
-function getCurrentWeather() {
+function getCurrentWeather({ city, lat, long }) {
   const weather = {
     temperature: 37,
   };
-  console.log(`Current weather: ${weather.temperature} °C`);
+  const location = city ?? `${lat} ${long}`;
+  console.log(`Current weather in ${location}: ${weather.temperature} °C`);
 }
