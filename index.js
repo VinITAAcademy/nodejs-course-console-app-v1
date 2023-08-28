@@ -4,7 +4,12 @@ console.log("The Weather CLI App");
 
 try {
   const command = parseCommand(process.argv.slice(2));
-  console.log(command);
+
+  if (command.command === "current") {
+    console.log("Current weather: 37 °C");
+  } else {
+    throw new Error(`Unknown command: ${command.command}`);
+  }
 } catch (e) {
   let currentError = e;
   let msg = currentError.message;
