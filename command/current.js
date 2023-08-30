@@ -1,4 +1,5 @@
 export function getCurrentWeather({ city, lat, long }) {
+  validate({ city, lat, long });
   const weather = {
     temperature: 37,
   };
