@@ -34,4 +34,10 @@ describe("validate()", () => {
       message: "Either city or lat and long should be present",
     });
   });
+
+  test("should throw an error if city name length less than 2 characters", () => {
+    assert.throws(() => validate({ city: "a" }), {
+      message: "City name should be longer than 2 characters",
+    });
+  });
 });

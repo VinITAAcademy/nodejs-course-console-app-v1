@@ -10,4 +10,8 @@ export function validate({ city, lat, long }) {
   if (!city && !(lat && long)) {
     throw new Error("Either city or lat and long should be present");
   }
+
+  if (city && city.length < 2) {
+    throw new Error("City name should be longer than 2 characters");
+  }
 }
