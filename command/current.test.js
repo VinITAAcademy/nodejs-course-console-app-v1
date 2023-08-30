@@ -40,4 +40,28 @@ describe("validate()", () => {
       message: "City name should be longer than 2 characters",
     });
   });
+
+  test("should throw an error if latitude is not a number", () => {
+    assert.throws(() => validate({ lat: "abc", long: "28.4816" }), {
+      message: "Latitude should be a number between -90 and 90",
+    });
+  });
+
+  test("should throw an error if latitude is not a number between -90 and 90", () => {
+    assert.throws(() => validate({ lat: "91", long: "28.4816" }), {
+      message: "Latitude should be a number between -90 and 90",
+    });
+  });
+
+  test("should throw an error if longitude is not a number", () => {
+    assert.throws(() => validate({ lat: "49.2328", long: "abc" }), {
+      message: "Longitude should be a number between -180 and 180",
+    });
+  });
+
+  test("should throw an error if longitude is not a number between -180 and 180", () => {
+    assert.throws(() => validate({ lat: "49.2328", long: "181" }), {
+      message: "Longitude should be a number between -180 and 180",
+    });
+  });
 });
