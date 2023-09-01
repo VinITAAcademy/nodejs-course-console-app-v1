@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --test .",
     "start": "node index.js",
-    "lint": "eslint . && prettier -w ."
+    "lint": "eslint . && prettier -w .",
+    "prepare": "husky install",
+    "precommit": "eslint . && prettier -c . && npm run test"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
   "devDependencies": {
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
+    "husky": "^8.0.3",
     "prettier": "^3.0.2"
   }
 }
