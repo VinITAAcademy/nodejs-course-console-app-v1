@@ -1,3 +1,5 @@
+const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+
 export class OpenMeteo {
   constructor() {}
 
@@ -13,7 +15,7 @@ export class OpenMeteo {
   }
 
   async getCurrentWeatherByCoordinates(lat, long) {
-    const result = await this.#call("https://api.open-meteo.com/v1/forecast", {
+    const result = await this.#call(FORECAST_URL, {
       latitude: lat,
       longitude: long,
       current_weather: "true",
