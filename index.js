@@ -6,6 +6,13 @@ try {
   const command = parseCommand(process.argv.slice(2));
   console.log(command);
 } catch (e) {
-  console.error(e.message);
+  let currentError = e;
+  let msg = currentError.message;
+  while (currentError.cause) {
+    currentError = currentError.cause;
+    msg += `: ${currentError.message}`;
+  }
+
+  console.error(msg);
   process.exit(1);
 }
