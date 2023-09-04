@@ -1,16 +1,24 @@
 export class OpenMeteo {
   constructor() {}
 
-  async getCurrentWeatherByCoordinates(lat, long) {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", lat);
-    url.searchParams.set("longitude", long);
-    url.searchParams.set("current_weather", "true");
-    url.searchParams.set("timezone", tz);
+  async #call(basePath, params) {
+    const url = new URL(basePath);
+
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
 
     const resp = await fetch(url);
-    const result = await resp.json();
+    return await resp.json();
+  }
+
+  async getCurrentWeatherByCoordinates(lat, long) {
+    const result = await this.#call("https://api.open-meteo.com/v1/forecast", {
+      latitude: lat,
+      longitude: long,
+      current_weather: "true",
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    });
 
     const { time, temperature } = result.current_weather;
 
