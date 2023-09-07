@@ -28,15 +28,29 @@ describe("OpenMeteo", () => {
       assert.equal(weather.temperature, 21);
       assert.equal(weather.time.getTime(), time.getTime());
     });
+
+    test("should throw an error if server returns non-200 status code", async () => {
+      mockFetchOnce({}, { status: 500 });
+
+      await assert.rejects(
+        () => client.getCurrentWeatherByCoordinates("49.2328", "28.4816"),
+        {
+          message: "could not fetch weather data",
+        },
+      );
+    });
   });
 });
 
-function mockFetchOnce(response) {
+function mockFetchOnce(responseBody, options = {}) {
   return mock.method(
     globalThis,
     "fetch",
     async () => {
-      return new Response(JSON.stringify(response));
+      const response = new Response(JSON.stringify(responseBody), {
+        status: options?.status || 200,
+      });
+      return response;
     },
     { times: 1 },
   );
