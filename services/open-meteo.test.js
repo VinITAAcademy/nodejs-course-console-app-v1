@@ -41,6 +41,19 @@ describe("OpenMeteo", () => {
         },
       );
     });
+
+    test("should throw an error if failed to fetch", async () => {
+      const expectedError = new Error("failed to fetch");
+      mockFetchOnce({ error: expectedError });
+
+      await assert.rejects(
+        () => client.getCurrentWeatherByCoordinates("49.2328", "28.4816"),
+        {
+          message: "could not fetch weather data",
+          cause: expectedError,
+        },
+      );
+    });
   });
 });
 
