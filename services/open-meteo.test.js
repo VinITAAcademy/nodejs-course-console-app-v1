@@ -14,9 +14,11 @@ describe("OpenMeteo", () => {
       const expectedTemperature = 21;
 
       mockFetchOnce({
-        current_weather: {
-          temperature: expectedTemperature,
-          time,
+        body: {
+          current_weather: {
+            temperature: expectedTemperature,
+            time,
+          },
         },
       });
 
@@ -30,7 +32,7 @@ describe("OpenMeteo", () => {
     });
 
     test("should throw an error if server returns non-200 status code", async () => {
-      mockFetchOnce({}, { status: 500 });
+      mockFetchOnce({ status: 500 });
 
       await assert.rejects(
         () => client.getCurrentWeatherByCoordinates("49.2328", "28.4816"),
@@ -42,15 +44,17 @@ describe("OpenMeteo", () => {
   });
 });
 
-function mockFetchOnce(responseBody, options = {}) {
+function mockFetchOnce({ error, status, body } = { status: 200 }) {
   return mock.method(
     globalThis,
     "fetch",
     async () => {
-      const response = new Response(JSON.stringify(responseBody), {
-        status: options?.status || 200,
+      if (error) {
+        throw error;
+      }
+      return new Response(JSON.stringify(body), {
+        status: status || 200,
       });
-      return response;
     },
     { times: 1 },
   );
