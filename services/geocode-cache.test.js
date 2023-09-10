@@ -108,4 +108,38 @@ describe("GeocodeCache", () => {
       JSON.stringify({ Vinnytsia: { latitude: 49.2328, longitude: 28.4816 } }),
     );
   });
+
+  test("should ignore read failure", async () => {
+    mock.method(fs, "readFile", async () => {
+      throw new Error("read failure");
+    });
+
+    const mockGeocodeProvider = mock.method(
+      geocodeProvider,
+      "getCoordinatesByCityName",
+      async () => ({
+        latitude: 49.2328,
+        longitude: 28.4816,
+      }),
+    );
+    const mockWriteFile = mock.method(fs, "writeFile", async () => {});
+
+    const result = await cache.getCoordinatesByCityName("Vinnytsia");
+
+    assert.equal(result.latitude, 49.2328);
+    assert.equal(result.longitude, 28.4816);
+
+    assert.equal(mockGeocodeProvider.mock.calls.length, 1);
+    assert.equal(mockGeocodeProvider.mock.calls[0].arguments[0], "Vinnytsia");
+
+    assert.equal(mockWriteFile.mock.calls.length, 1);
+    assert.equal(
+      mockWriteFile.mock.calls[0].arguments[0],
+      `some-dir${path.sep}geocode-cache.json`,
+    );
+    assert.equal(
+      mockWriteFile.mock.calls[0].arguments[1],
+      JSON.stringify({ Vinnytsia: { latitude: 49.2328, longitude: 28.4816 } }),
+    );
+  });
 });
