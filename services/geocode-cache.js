@@ -39,7 +39,18 @@ export class GeocodeCache {
   }
 
   async #readFromCache() {
-    const content = await fs.readFile(this.#fileName(), "utf-8");
+    let content;
+    try {
+      content = await fs.readFile(this.#fileName(), "utf-8");
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        return {};
+      } else {
+        console.warn("Warning: could not read cache file: ", err.message);
+        return {};
+      }
+    }
+
     return JSON.parse(content);
   }
 
