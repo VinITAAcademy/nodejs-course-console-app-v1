@@ -51,7 +51,14 @@ export class GeocodeCache {
       }
     }
 
-    return JSON.parse(content);
+    let json;
+    try {
+      json = JSON.parse(content);
+    } catch (err) {
+      console.warn("Warning: could not parse cache file: ", err.message);
+      return {};
+    }
+    return json;
   }
 
   #fileName() {
