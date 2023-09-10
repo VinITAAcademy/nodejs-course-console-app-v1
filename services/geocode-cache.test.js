@@ -53,4 +53,27 @@ describe("GeocodeCache", () => {
       JSON.stringify({ Vinnytsia: { latitude: 49.2328, longitude: 28.4816 } }),
     );
   });
+
+  test("should return data from cache", async () => {
+    mock.method(fs, "readFile", async () => {
+      return JSON.stringify({
+        Vinnytsia: { latitude: 49.2328, longitude: 28.4816 },
+      });
+    });
+
+    const mockGeocodeProvider = mock.method(
+      geocodeProvider,
+      "getCoordinatesByCityName",
+      async () => ({}),
+    );
+    const mockWriteFile = mock.method(fs, "writeFile", async () => {});
+
+    const result = await cache.getCoordinatesByCityName("Vinnytsia");
+
+    assert.equal(result.latitude, 49.2328);
+    assert.equal(result.longitude, 28.4816);
+
+    assert.equal(mockGeocodeProvider.mock.calls.length, 0);
+    assert.equal(mockWriteFile.mock.calls.length, 0);
+  });
 });
