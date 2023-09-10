@@ -21,6 +21,19 @@ export class GeocodeCache {
 
   async #writeToCache(cache) {
     const json = JSON.stringify(cache);
-    await fs.writeFile(path.join(this.#cacheDir, CACHE_FILE), json);
+    try {
+      await fs.writeFile(this.#fileName(), json);
+    } catch (err) {
+      if (err.code === "ENOENT") {
+        await fs.mkdir(this.#cacheDir);
+        await fs.writeFile(this.#fileName(), json);
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  #fileName() {
+    return path.join(this.#cacheDir, CACHE_FILE);
   }
 }
