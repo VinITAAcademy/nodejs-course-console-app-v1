@@ -12,8 +12,13 @@ export class GeocodeCache {
   }
 
   async getCoordinatesByCityName(name) {
-    const cache = {};
+    const cache = await this.#readFromCache();
+    if (cache[name]) {
+      return cache[name];
+    }
+
     const result = await this.#geocodeProvider.getCoordinatesByCityName(name);
+
     cache[name] = result;
     await this.#writeToCache(cache);
     return result;
@@ -31,6 +36,11 @@ export class GeocodeCache {
         throw err;
       }
     }
+  }
+
+  async #readFromCache() {
+    const content = await fs.readFile(this.#fileName(), "utf-8");
+    return JSON.parse(content);
   }
 
   #fileName() {
